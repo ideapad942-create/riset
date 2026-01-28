@@ -3,51 +3,74 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Microstock Title Research Pro</title>
+    <title>Microstock Research Pro - Ultimate UI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
     <style>
         :root {
-            --bg-color: #121212;
-            --panel-bg: #1e1e1e;
-            --card-bg: #252525;
-            --text-primary: #e0e0e0;
-            --text-secondary: #a0a0a0;
-            --accent-green: #00E676; 
-            --accent-blue: #2979FF;
-            --border-color: #333;
-            --save-color: #FFC400;
+            --primary-gradient: linear-gradient(135deg, #00C9FF 0%, #92FE9D 100%);
+            --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --glass-bg: rgba(25, 25, 35, 0.65);
+            --glass-border: 1px solid rgba(255, 255, 255, 0.1);
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --text-main: #ffffff;
+            --text-muted: #a0a0a0;
+            --accent-green: #00e676;
+            --accent-blue: #2979ff;
+            --save-color: #ffca28;
+            --danger-color: #ff5252;
         }
 
+        * { box-sizing: border-box; }
+
         body {
-            font-family: 'Inter', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-primary);
+            font-family: 'Poppins', sans-serif;
             margin: 0;
+            background: #0f0c29;  /* Fallback */
+            background: linear-gradient(to right, #24243e, #302b63, #0f0c29);
+            color: var(--text-main);
+            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
             padding: 20px;
-            box-sizing: border-box;
         }
 
+        /* Glassmorphism Container */
         .container {
             width: 100%;
-            max-width: 1000px;
-            background-color: var(--panel-bg);
-            border-radius: 16px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
-            overflow: hidden;
+            max-width: 1050px;
+            height: 92vh;
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: var(--glass-border);
+            border-radius: 24px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
             display: flex;
             flex-direction: column;
-            height: 95vh;
-            border: 1px solid var(--border-color);
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Decorative Glow */
+        .container::before {
+            content: '';
+            position: absolute;
+            top: -50px; left: -50px;
+            width: 150px; height: 150px;
+            background: var(--primary-gradient);
+            filter: blur(80px);
+            opacity: 0.4;
+            pointer-events: none;
         }
 
         /* Tabs Navigation */
         .tabs {
             display: flex;
-            background-color: #161616;
-            border-bottom: 1px solid var(--border-color);
+            background: rgba(0,0,0,0.2);
+            padding: 10px 10px 0 10px;
+            border-bottom: var(--glass-border);
         }
 
         .tab-btn {
@@ -55,279 +78,265 @@
             padding: 18px;
             background: transparent;
             border: none;
-            color: var(--text-secondary);
+            color: var(--text-muted);
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            font-size: 14px;
             cursor: pointer;
-            font-size: 13px;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
             transition: all 0.3s ease;
+            border-radius: 12px 12px 0 0;
             position: relative;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
-        .tab-btn:hover { color: #fff; background-color: #222; }
+        .tab-btn:hover { color: #fff; background: rgba(255,255,255,0.05); }
 
         .tab-btn.active {
-            color: var(--accent-green);
-            background-color: var(--panel-bg);
-        }
-        
-        .tab-btn.active::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 3px;
-            background-color: var(--accent-green);
+            color: #fff;
+            background: linear-gradient(to top, rgba(41, 121, 255, 0.1), transparent);
+            border-bottom: 3px solid var(--accent-blue);
         }
 
         .badge {
-            background-color: var(--save-color);
-            color: #121212;
-            border-radius: 8px;
-            padding: 2px 6px;
+            background: var(--save-color);
+            color: #000;
+            padding: 2px 8px;
+            border-radius: 20px;
             font-size: 10px;
             font-weight: 800;
-            margin-left: 6px;
-            vertical-align: text-top;
+            margin-left: 8px;
+            vertical-align: middle;
             display: none;
+            box-shadow: 0 0 10px rgba(255, 202, 40, 0.5);
         }
 
         /* Content Area */
         .tab-content {
             display: none;
-            padding: 25px;
+            padding: 30px;
             flex-grow: 1;
             flex-direction: column;
             overflow-y: auto;
+            animation: fadeIn 0.4s ease;
         }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         .tab-content.active { display: flex; }
 
-        /* Guide List Styling */
-        .guide-list {
-            padding-left: 20px;
-            margin: 0;
-            color: #ccc;
-        }
-        .guide-list li {
-            margin-bottom: 12px;
-            line-height: 1.6;
-            font-size: 14px;
-        }
-        .highlight {
-            color: var(--accent-green);
-            font-weight: bold;
-        }
-        .warn {
-            color: var(--save-color);
-            font-weight: bold;
-        }
+        h2 { margin-top: 0; font-weight: 300; letter-spacing: 1px; }
+        h2 strong { font-weight: 700; color: var(--accent-green); }
 
-        /* Form Elements */
-        label { 
-            margin-bottom: 10px; 
-            font-weight: 600; 
-            color: var(--text-secondary); 
-            display: block; 
-            font-size: 14px;
-        }
+        /* Inputs & Textareas */
+        label { margin-bottom: 10px; display: block; color: var(--text-muted); font-size: 13px; font-weight: 500; }
 
-        textarea, input[type="text"], input[type="password"] {
+        input, textarea {
             width: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             padding: 15px;
-            background-color: var(--bg-color);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
             color: #fff;
+            border-radius: 12px;
+            font-family: 'Poppins', sans-serif;
             font-size: 14px;
-            box-sizing: border-box;
-            transition: border-color 0.2s;
-            font-family: inherit;
+            transition: all 0.3s;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
         }
-        
-        textarea:focus, input:focus {
-            border-color: var(--accent-green);
-            outline: none;
-        }
-        
-        textarea { resize: vertical; height: 85px; line-height: 1.5; }
 
-        button.action-btn {
-            background-color: var(--accent-green);
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+            background: rgba(0, 0, 0, 0.5);
+            box-shadow: 0 0 15px rgba(41, 121, 255, 0.3);
+        }
+
+        /* Modern Buttons */
+        .action-btn {
+            background: var(--primary-gradient);
             color: #000;
-            padding: 0 24px;
-            height: 50px;
             border: none;
-            border-radius: 8px;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
             cursor: pointer;
             font-size: 14px;
-            font-weight: 700;
-            transition: transform 0.1s, background-color 0.2s;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            box-shadow: 0 4px 15px rgba(0, 201, 255, 0.4);
+            transition: transform 0.2s, box-shadow 0.2s;
         }
-        button.action-btn:hover { background-color: #00C853; }
-        button.action-btn:active { transform: scale(0.98); }
 
-        /* Results Grid */
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 201, 255, 0.6);
+        }
+
+        .action-btn:active { transform: scale(0.95); }
+
+        /* Guide List Styling */
+        .guide-box {
+            background: rgba(0,0,0,0.3);
+            border-radius: 16px;
+            padding: 25px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        .guide-list { padding-left: 20px; color: #ddd; margin: 0; }
+        .guide-list li { margin-bottom: 15px; line-height: 1.6; }
+        .highlight { color: var(--accent-green); font-weight: 700; border-bottom: 1px dashed var(--accent-green); }
+        .warn { color: var(--save-color); font-weight: 700; }
+
+        /* Result Grid */
         .result-container {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 25px;
-            margin-top: 10px;
+            margin-top: 20px;
             height: 100%;
             overflow: hidden;
         }
 
-        @media (max-width: 768px) {
-            .result-container { grid-template-columns: 1fr; overflow-y: auto; }
-        }
+        @media (max-width: 800px) { .result-container { grid-template-columns: 1fr; overflow-y: auto; } }
 
         .result-column {
-            background-color: #181818;
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 16px;
             padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
             display: flex;
             flex-direction: column;
             overflow-y: auto;
         }
 
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.4); }
+
         .col-header {
-            font-size: 14px;
-            color: var(--accent-green);
-            border-bottom: 2px solid #333;
-            padding-bottom: 15px;
-            margin-bottom: 20px;
-            font-weight: 800;
-            text-transform: uppercase;
             text-align: center;
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding-bottom: 15px;
+            margin-bottom: 15px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
             letter-spacing: 1px;
         }
-        
-        .col-header.v2 { color: var(--accent-blue); }
+        .col-a { color: var(--accent-green); text-shadow: 0 0 10px rgba(0, 230, 118, 0.3); }
+        .col-b { color: var(--accent-blue); text-shadow: 0 0 10px rgba(41, 121, 255, 0.3); }
 
-        /* Title Card Style */
-        .title-list {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
+        /* Title Cards */
         .title-card {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-left: 4px solid transparent; 
-            padding: 15px;
-            border-radius: 8px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            transition: all 0.2s ease;
+            background: var(--card-bg);
+            border: 1px solid rgba(255,255,255,0.08);
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
 
         .title-card:hover {
-            background-color: #2a2a2a;
-            border-color: #555;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            background: rgba(255,255,255,0.06);
+            border-color: rgba(255,255,255,0.2);
+            transform: translateX(5px);
         }
 
-        .result-column:first-child .title-card { border-left-color: var(--accent-green); }
-        .result-column:last-child .title-card { border-left-color: var(--accent-blue); }
+        .title-card::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 0; bottom: 0;
+            width: 4px;
+            background: #555;
+        }
+
+        .result-column:first-child .title-card::before { background: var(--accent-green); }
+        .result-column:last-child .title-card::before { background: var(--accent-blue); }
 
         .title-text {
-            color: #fff;
-            font-weight: 500;
             font-size: 14px;
-            line-height: 1.4;
+            line-height: 1.5;
+            display: block;
+            margin-bottom: 10px;
+            color: #eee;
         }
 
-        .btn-group {
-            display: flex;
-            gap: 10px;
-            justify-content: flex-end;
-            margin-top: 5px;
-        }
-
+        /* Mini Action Buttons */
+        .btn-group { display: flex; gap: 8px; justify-content: flex-end; }
+        
         .icon-btn {
-            border: 1px solid #444;
-            background-color: #1a1a1a;
+            background: rgba(0,0,0,0.4);
+            border: 1px solid rgba(255,255,255,0.2);
             color: #ccc;
-            border-radius: 6px;
             padding: 6px 12px;
+            border-radius: 8px;
             font-size: 11px;
-            font-weight: 700;
             cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 600;
             display: flex;
             align-items: center;
-            gap: 6px;
-            transition: all 0.2s;
-            text-transform: uppercase;
-        }
-        
-        .icon-btn:hover { background-color: #333; color: #fff; border-color: #666; }
-        .icon-btn.btn-save:hover { border-color: var(--save-color); color: var(--save-color); }
-        .icon-btn.saved {
-            background-color: var(--save-color);
-            color: #000;
-            border-color: var(--save-color);
-            cursor: default;
+            gap: 5px;
         }
 
-        /* Saved List */
-        .saved-list-container {
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            background-color: var(--bg-color);
-            flex-grow: 1;
-            overflow-y: auto;
-            margin-top: 15px;
+        .icon-btn:hover { background: #fff; color: #000; }
+        
+        .icon-btn.saved {
+            background: var(--save-color);
+            color: #000;
+            border-color: var(--save-color);
+            box-shadow: 0 0 10px rgba(255, 202, 40, 0.4);
         }
+
+        /* Saved Area */
         .saved-item {
-            padding: 15px 20px;
-            border-bottom: 1px solid #333;
+            background: rgba(255,255,255,0.03);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            padding: 15px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: 14px;
             transition: background 0.2s;
         }
-        .saved-item:hover { background-color: #1a1a1a; }
-        .saved-item:last-child { border-bottom: none; }
+        .saved-item:hover { background: rgba(255,255,255,0.06); }
+        .saved-item:first-child { border-top-left-radius: 12px; border-top-right-radius: 12px; }
+        .saved-item:last-child { border-bottom: none; border-bottom-left-radius: 12px; border-bottom-right-radius: 12px; }
 
         .delete-btn {
-            background: none;
+            background: rgba(255, 82, 82, 0.1);
+            color: var(--danger-color);
             border: none;
-            color: #ff5252;
+            width: 30px; height: 30px;
+            border-radius: 50%;
             cursor: pointer;
-            padding: 5px;
-            opacity: 0.7;
-            transition: opacity 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
         }
-        .delete-btn:hover { opacity: 1; }
+        .delete-btn:hover { background: var(--danger-color); color: white; }
 
         /* Loader */
         .loader {
             display: none;
-            font-size: 13px;
-            color: var(--accent-green);
             margin-left: 15px;
+            color: var(--accent-green);
             font-weight: 600;
-            letter-spacing: 0.5px;
-            animation: pulse 1.5s infinite;
+            font-size: 13px;
+            animation: blink 1.5s infinite;
         }
-        @keyframes pulse { 0% { opacity: 0.4; } 50% { opacity: 1; } 100% { opacity: 0.4; } }
+        @keyframes blink { 0% { opacity: 0.3; } 50% { opacity: 1; } 100% { opacity: 0.3; } }
 
         .footer {
             text-align: center;
-            padding: 12px;
+            padding: 15px;
             font-size: 11px;
-            color: #555;
-            background-color: #161616;
-            border-top: 1px solid var(--border-color);
+            color: rgba(255,255,255,0.3);
+            border-top: var(--glass-border);
+            margin-top: auto;
         }
     </style>
 </head>
@@ -337,96 +346,97 @@
     <div class="tabs">
         <button class="tab-btn active" onclick="openTab('tab1')">1. API Key</button>
         <button class="tab-btn" onclick="openTab('tab2')">2. Panduan</button>
-        <button class="tab-btn" onclick="openTab('tab3')">3. Riset Judul</button>
+        <button class="tab-btn" onclick="openTab('tab3')">3. Riset Pro</button>
         <button class="tab-btn" onclick="openTab('tab4')">4. Disimpan <span id="savedBadge" class="badge">0</span></button>
     </div>
 
     <div id="tab1" class="tab-content active">
-        <h2 style="color:var(--accent-green); margin-top:0;">Konfigurasi API</h2>
-        <p style="font-size:13px; color:#888;">Masukkan API Key Groq Anda untuk memulai.</p>
-        <label>Groq API Key:</label>
-        <input type="password" id="apiKey" placeholder="gsk_...">
-        <div style="margin-top:20px;">
-            <button class="action-btn" onclick="saveKeyAndNext()">Simpan & Lanjut</button>
+        <h2>Setup <strong>API Groq</strong></h2>
+        <p style="color:#aaa;">Kunci akses Anda disimpan secara lokal dan aman di browser.</p>
+        
+        <div style="margin-top:20px; max-width:600px;">
+            <label>Masukkan API Key:</label>
+            <input type="password" id="apiKey" placeholder="gsk_xxxxxxxxxxxxxxxxxxxxxxxxxxxxx">
+            <div style="margin-top:25px;">
+                <button class="action-btn" onclick="saveKeyAndNext()">Simpan & Lanjut</button>
+            </div>
         </div>
     </div>
 
     <div id="tab2" class="tab-content">
-        <h2 style="color:var(--accent-green); margin-top:0;">Panduan Riset Microstock</h2>
-        <div style="background-color:#181818; padding:20px; border-radius:8px; border:1px solid #333;">
+        <h2>Panduan <strong>Riset Microstock</strong></h2>
+        <div class="guide-box">
             <ol class="guide-list">
-                <li>Ubah lokasi Adobe Stock menjadi <span class="highlight">US atau UK</span>.</li>
-                <li>Gunakan filter urutan berdasarkan <span class="highlight">Download</span>.</li>
-                <li>Cari video yang mau diriset (stok pesaing).</li>
-                <li>Copy <span class="highlight">Full Judulnya</span> (judul lengkap).</li>
-                <li>Paste di Tab 3. Akan muncul 2 Opsi: <span class="highlight">Versi Singkat (Umum)</span> & <span class="highlight">Versi Detail (Spesifik)</span>.</li>
-                <li>Silahkan <span class="highlight">Copy satu per satu</span> judul yang dihasilkan AI untuk cek pesaingnya di Adobe Stock.</li>
-                <li>Prioritas pesaing di bawah <span class="highlight">10.000</span> (Lebih bagus di bawah <span class="warn">5.000</span>).</li>
-                <li>Simpan judul yang bagus. <span class="highlight">Data AMAN</span> tidak hilang walau di-refresh. Hapus nanti setelah di-ekspor.</li>
+                <li>Ubah lokasi Adobe Stock menjadi <span class="highlight">US atau UK</span> untuk hasil global.</li>
+                <li>Gunakan filter urutan berdasarkan <span class="highlight">Downloads</span> (Terlaris).</li>
+                <li>Cari video kompetitor yang ingin diriset.</li>
+                <li>Copy <span class="highlight">Full Judulnya</span> (Judul Lengkap).</li>
+                <li>Paste di <strong>Tab 3</strong>. Tool akan membuat 2 versi: <span class="col-a">Versi Singkat (3 Kata)</span> & <span class="col-b">Versi Detail (5-10 Kata)</span>.</li>
+                <li>Copy judul satu per satu, cek jumlah pesaing di Adobe Stock.</li>
+                <li>Target pesaing di bawah <span class="highlight">10.000</span> (Idealnya <span class="warn">&lt; 5.000</span>).</li>
+                <li>Simpan judul potensial. Data <span class="highlight">AMAN</span> (tidak hilang saat refresh). Hapus setelah diekspor.</li>
             </ol>
         </div>
-        <br>
-        <button class="action-btn" onclick="openTab('tab3')">Mengerti, Mulai Riset</button>
+        <div style="margin-top:25px;">
+            <button class="action-btn" onclick="openTab('tab3')">Mengerti, Mulai Riset</button>
+        </div>
     </div>
 
     <div id="tab3" class="tab-content">
-        <div style="display:flex; align-items:flex-start; gap:15px;">
+        <div style="display:flex; align-items:flex-start; gap:20px;">
             <div style="flex-grow:1;">
-                <label for="inputTitle">Judul Referensi (Kompetitor):</label>
-                <textarea id="inputTitle" placeholder="Paste judul panjang Adobe Stock di sini..."></textarea>
+                <label for="inputTitle">Judul Kompetitor (Adobe Stock):</label>
+                <textarea id="inputTitle" placeholder="Paste judul panjang di sini..."></textarea>
             </div>
-            <div style="margin-top:28px;">
-                 <button class="action-btn" onclick="processTitle()">Generate Title</button>
+            <div style="margin-top:30px;">
+                 <button class="action-btn" onclick="processTitle()">Generate ✨</button>
             </div>
         </div>
-        <div class="loader" id="loader">Processing Logic (Strict Word Count)...</div>
+        <div class="loader" id="loader">Menganalisis Logic (Strict Mode)...</div>
 
         <div id="resultsArea" class="result-container" style="display:none;">
-            
             <div class="result-column">
-                <div class="col-header">Opsi A: 3 Kata (Umum)</div>
+                <div class="col-header col-a">Opsi A: 3 Kata (Umum)</div>
                 <div id="coreTitles" class="title-list"></div>
             </div>
-
             <div class="result-column">
-                <div class="col-header v2">Opsi B: 5-10 Kata (Spesifik)</div>
+                <div class="col-header col-b">Opsi B: 5-10 Kata (Spesifik)</div>
                 <div id="specificTitles" class="title-list"></div>
             </div>
-
         </div>
     </div>
 
     <div id="tab4" class="tab-content">
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-            <h2 style="margin:0; font-size:18px;">Koleksi Judul Anda</h2>
-            <button onclick="clearAllSaved()" style="background:none; border:none; color:#ff5252; cursor:pointer; font-size:12px; font-weight:700; text-transform:uppercase;">Hapus Semua</button>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+            <h2>Koleksi <strong>Judul Terpilih</strong></h2>
+            <button onclick="clearAllSaved()" style="background:none; border:none; color:var(--danger-color); cursor:pointer; font-weight:600; font-size:12px; letter-spacing:1px;">HAPUS SEMUA</button>
         </div>
         
-        <div class="saved-list-container">
+        <div class="saved-list-container" style="flex-grow:1; overflow-y:auto; background:rgba(0,0,0,0.2); border-radius:12px;">
             <div id="savedContainer">
-                <div style="padding:40px; text-align:center; color:#555; font-size:13px;">Belum ada judul yang disimpan.</div>
+                <div style="padding:50px; text-align:center; color:rgba(255,255,255,0.3);">
+                    Keranjang masih kosong.<br>Silakan riset di Tab 3.
+                </div>
             </div>
         </div>
 
-        <div style="margin-top:15px;">
-            <button class="action-btn" onclick="exportTxt()" style="width:100%; background-color: var(--accent-blue); color:white;">Download .TXT</button>
+        <div style="margin-top:20px;">
+            <button class="action-btn" style="width:100%; background: var(--secondary-gradient); box-shadow: 0 4px 15px rgba(245, 87, 108, 0.4);" onclick="exportTxt()">Download .TXT</button>
         </div>
     </div>
 
     <div class="footer">
-        Microstock Tool Professional v4.2
+        Ultimate Microstock Tool © 2026
     </div>
 </div>
 
 <script>
     let savedTitles = [];
 
-    // Init Logic
     document.addEventListener('DOMContentLoaded', () => {
         const savedKey = localStorage.getItem('groqApiKey');
         if (savedKey) document.getElementById('apiKey').value = savedKey;
         
-        // Data tersimpan di localStorage, aman saat refresh
         const storedList = localStorage.getItem('mySavedTitles');
         if(storedList) {
             savedTitles = JSON.parse(storedList);
@@ -477,19 +487,18 @@
                             
                             CONSTRAINT 1 (Option A - Strict 3 Words):
                             - Generate 5 titles.
-                            - EACH title must contain EXACTLY 3 WORDS. No more, no less.
-                            - Example: "Blue Sky Cloud", "Man Running Fast", "Red Car Driving".
+                            - EACH title must contain EXACTLY 3 WORDS.
+                            - Example: "Blue Sky Cloud".
                             
                             CONSTRAINT 2 (Option B - Specific 5-10 Words):
                             - Generate 5 titles.
                             - EACH title must be between 5 AND 10 WORDS.
-                            - Descriptive, including texture, action, or mood.
-                            - Example: "Cinematic Slow Motion of Blue Particles on Black Background" (9 words).
+                            - Example: "Cinematic Slow Motion of Blue Particles on Black Background".
 
                             JSON Output Format:
                             {
-                                "set1": { "titles": ["3 word title", "3 word title", ...] },
-                                "set2": { "titles": ["5-10 word title", "5-10 word title", ...] }
+                                "set1": { "titles": ["...", "...", ...] },
+                                "set2": { "titles": ["...", "...", ...] }
                             }`
                         },
                         { role: "user", content: `Original Title: "${title}"` }
@@ -524,14 +533,14 @@
             card.className = 'title-card';
             
             const isSaved = savedTitles.includes(t);
-            const saveBtnClass = isSaved ? 'icon-btn btn-save saved' : 'icon-btn btn-save';
-            const saveBtnText = isSaved ? '✓ Disimpan' : '💾 Simpan';
+            const saveBtnClass = isSaved ? 'icon-btn saved' : 'icon-btn';
+            const saveBtnText = isSaved ? '✓ Tersimpan' : '💾 Simpan';
             const saveBtnAction = isSaved ? '' : `onclick="handleSave(this, '${t.replace(/'/g, "\\'")}')"`;
 
             card.innerHTML = `
                 <span class="title-text">${t}</span>
                 <div class="btn-group">
-                    <button class="icon-btn" onclick="copySimple('${t.replace(/'/g, "\\'")}')" title="Copy to Clipboard">
+                    <button class="icon-btn" onclick="copySimple('${t.replace(/'/g, "\\'")}')" title="Copy">
                         📋 Copy
                     </button>
                     <button class="${saveBtnClass}" ${saveBtnAction}>
@@ -549,12 +558,10 @@
 
     function handleSave(btn, text) {
         if (savedTitles.includes(text)) return;
-
         savedTitles.push(text);
         updateSavedUI();
-
-        btn.className = 'icon-btn btn-save saved';
-        btn.innerHTML = '✓ Disimpan';
+        btn.className = 'icon-btn saved';
+        btn.innerHTML = '✓ Tersimpan';
         btn.removeAttribute('onclick');
     }
 
@@ -573,7 +580,7 @@
 
         container.innerHTML = '';
         if (savedTitles.length === 0) {
-            container.innerHTML = '<div style="padding:40px; text-align:center; color:#555; font-size:13px;">Belum ada judul yang disimpan.</div>';
+            container.innerHTML = '<div style="padding:50px; text-align:center; color:rgba(255,255,255,0.3);">Keranjang masih kosong.<br>Silakan riset di Tab 3.</div>';
             return;
         }
 
@@ -581,7 +588,7 @@
             const div = document.createElement('div');
             div.className = 'saved-item';
             div.innerHTML = `
-                <span style="color:#e0e0e0; width:85%; line-height:1.4;">${title}</span>
+                <span style="color:#eee; width:85%; font-size:13px; line-height:1.4;">${title}</span>
                 <button class="delete-btn" onclick="removeSaved(${index})" title="Hapus">✕</button>
             `;
             container.appendChild(div);
@@ -594,7 +601,7 @@
     }
 
     function clearAllSaved() {
-        if(confirm("Yakin ingin menghapus semua daftar simpanan?")) {
+        if(confirm("Hapus semua daftar simpanan?")) {
             savedTitles = [];
             updateSavedUI();
         }
@@ -602,9 +609,7 @@
 
     function exportTxt() {
         if (savedTitles.length === 0) { alert('Daftar simpan masih kosong.'); return; }
-        
         const content = "--- MICROSTOCK TITLES LIST ---\n\n" + savedTitles.join('\n');
-        
         const blob = new Blob([content], { type: 'text/plain' });
         const a = document.createElement('a');
         a.href = URL.createObjectURL(blob);
