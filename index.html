@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Microstock Title & Keyword Pro V3</title>
+    <title>Microstock Title Generator (Clean V4)</title>
     <style>
         :root {
             --bg-color: #1e1e2e;
@@ -13,7 +13,7 @@
             --secondary-color: #2979FF; /* Biru */
             --danger-color: #FF1744;
             --border-color: #444;
-            --save-color: #FFC400; /* Kuning/Amber */
+            --save-color: #FFC400; /* Kuning */
             --panel-bg: #23232e;
         }
 
@@ -161,58 +161,27 @@
         
         .col-header.v2 { color: var(--secondary-color); }
 
-        .section-label {
-            font-size: 11px;
-            color: #888;
-            margin-top: 20px;
-            margin-bottom: 8px;
-            text-transform: uppercase;
-            font-weight: bold;
-            letter-spacing: 1px;
-        }
-        .section-label:first-child { margin-top: 0; }
-
-        /* Keyword List */
-        .keyword-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-        
-        .keyword-item {
-            background-color: #333;
-            margin-bottom: 5px;
-            padding: 8px 10px;
-            border-radius: 4px;
-            font-size: 13px;
-            color: #ddd;
-            border-left: 3px solid #555;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-        .keyword-item:hover { background-color: #444; color: white; }
-
         /* Title Cards */
         .title-list {
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 12px;
         }
 
         .title-card {
             background-color: #1e1e24;
             border: 1px solid #444;
-            padding: 12px;
+            padding: 15px;
             border-radius: 6px;
             font-size: 13px;
             display: flex;
             flex-direction: column;
-            gap: 8px;
-            line-height: 1.4;
+            gap: 10px;
+            line-height: 1.5;
             transition: all 0.2s;
         }
         
-        .title-card:hover { border-color: #777; }
+        .title-card:hover { border-color: #777; background-color: #25252b; }
 
         .title-text {
             color: #fff;
@@ -225,18 +194,20 @@
             gap: 8px;
             justify-content: flex-end;
             margin-top: 5px;
+            border-top: 1px solid #333;
+            padding-top: 10px;
         }
 
         .icon-btn {
             border: none;
             border-radius: 4px;
-            padding: 6px 12px;
+            padding: 6px 14px;
             font-size: 12px;
             font-weight: bold;
             cursor: pointer;
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 6px;
             transition: opacity 0.2s;
         }
         
@@ -290,7 +261,7 @@
     <div class="tabs">
         <button class="tab-btn active" onclick="openTab('tab1')">1. API Key</button>
         <button class="tab-btn" onclick="openTab('tab2')">2. Cara Pakai</button>
-        <button class="tab-btn" onclick="openTab('tab3')">3. Riset Utama</button>
+        <button class="tab-btn" onclick="openTab('tab3')">3. Riset Judul</button>
         <button class="tab-btn" onclick="openTab('tab4')">4. Judul Disimpan <span id="savedBadge" class="badge">0</span></button>
     </div>
 
@@ -303,14 +274,14 @@
 
     <div id="tab2" class="tab-content">
         <h2>Workflow Riset</h2>
-        <p>1. <strong>Cari Video:</strong> Buka Adobe Stock, cari video populer, copy judulnya.</p>
-        <p>2. <strong>Input:</strong> Paste judul di <strong>Tab 3</strong>.</p>
-        <p>3. <strong>Pilih Judul:</strong> Tool akan memberikan 2 opsi strategi. Pada bagian judul:</p>
+        <p>1. <strong>Input:</strong> Paste judul panjang dari Adobe Stock di <strong>Tab 3</strong>.</p>
+        <p>2. <strong>Pilih Judul:</strong> Tool akan menampilkan 2 kolom rekomendasi judul (Umum vs Spesifik).</p>
+        <p>3. <strong>Aksi:</strong></p>
         <ul>
-            <li>Tombol 📋 <strong>Copy</strong>: Salin judul untuk dipakai langsung.</li>
-            <li>Tombol 💾 <strong>Simpan</strong>: Masukkan ke daftar simpan (Tab 4) untuk didownload nanti.</li>
+            <li>Klik 📋 <strong>Copy</strong> untuk langsung menyalin.</li>
+            <li>Klik 💾 <strong>Simpan</strong> untuk menampung judul ke Tab 4.</li>
         </ul>
-        <p>4. <strong>Download:</strong> Setelah meriset banyak video, buka <strong>Tab 4</strong> untuk download semua judul dalam 1 file .txt.</p>
+        <p>4. <strong>Download:</strong> Setelah selesai riset banyak video, buka Tab 4 untuk download list judul.</p>
         <button class="action-btn" onclick="openTab('tab3')">Mulai Riset</button>
     </div>
 
@@ -318,33 +289,23 @@
         <div style="display:flex; align-items:center; gap:10px;">
             <div style="flex-grow:1;">
                 <label for="inputTitle">Input Judul Kompetitor:</label>
-                <textarea id="inputTitle" placeholder="Paste judul panjang Adobe Stock di sini..."></textarea>
+                <textarea id="inputTitle" placeholder="Paste judul Adobe Stock di sini..."></textarea>
             </div>
             <div style="display:flex; flex-direction:column;">
                  <button class="action-btn" onclick="processTitle()" style="height:50px;">Generate</button>
             </div>
         </div>
-        <div class="loader" id="loader">Sedang menganalisis judul...</div>
+        <div class="loader" id="loader">Sedang membuat rekomendasi judul...</div>
 
         <div id="resultsArea" class="result-container" style="display:none;">
             
             <div class="result-column">
                 <div class="col-header">Opsi A: Strategi Umum</div>
-                
-                <div class="section-label">5 Keyword (Panjang ~3 kata):</div>
-                <ul id="coreKeywords" class="keyword-list"></ul>
-
-                <div class="section-label" style="margin-top:20px;">5 Rekomendasi Judul (General):</div>
                 <div id="coreTitles" class="title-list"></div>
             </div>
 
             <div class="result-column">
                 <div class="col-header v2">Opsi B: Strategi Spesifik</div>
-                
-                <div class="section-label">5 Keyword (Panjang 5-10 kata):</div>
-                <ul id="specificKeywords" class="keyword-list"></ul>
-
-                <div class="section-label" style="margin-top:20px;">5 Rekomendasi Judul (Detail):</div>
                 <div id="specificTitles" class="title-list"></div>
             </div>
 
@@ -425,20 +386,20 @@
                             role: "system",
                             content: `You are a Microstock Metadata Expert. Output JSON ONLY.
                             
-                            Task: Analyze the input title and generate two strategies.
+                            Task: Analyze the input title and generate two title strategies.
                             
-                            STRATEGY A (General):
-                            - "keywords": Generate exactly 5 phrases. Each phrase must be around 3 words long. (For broad competition check).
-                            - "titles": Generate 5 standard professional titles (English).
+                            STRATEGY A (General/Broad):
+                            - First, internally identify 5 broad keywords (don't output them).
+                            - Generate 5 Standard Professional Titles (English) based on those broad keywords.
                             
                             STRATEGY B (Specific/Long-tail):
-                            - "keywords": Generate exactly 5 long-tail phrases. Each phrase must be between 5 to 10 words long. (For niche competition check).
-                            - "titles": Generate 5 highly descriptive/specific titles (English).
+                            - First, internally identify 5 long-tail/specific keywords (don't output them).
+                            - Generate 5 Highly Descriptive/Specific Titles (English) focusing on details.
 
                             JSON Output Format:
                             {
-                                "set1": { "keywords": ["...", ...], "titles": ["...", ...] },
-                                "set2": { "keywords": ["...", ...], "titles": ["...", ...] }
+                                "set1": { "titles": ["...", "...", "...", "...", "..."] },
+                                "set2": { "titles": ["...", "...", "...", "...", "..."] }
                             }`
                         },
                         { role: "user", content: `Original Title: "${title}"` }
@@ -452,12 +413,10 @@
             const data = await response.json();
             const content = JSON.parse(data.choices[0].message.content);
             
-            // Render Set 1 (General)
-            renderKeywords('coreKeywords', content.set1.keywords);
+            // Render Set 1 (General Titles Only)
             renderTitles('coreTitles', content.set1.titles);
 
-            // Render Set 2 (Specific)
-            renderKeywords('specificKeywords', content.set2.keywords);
+            // Render Set 2 (Specific Titles Only)
             renderTitles('specificTitles', content.set2.titles);
 
             resultsArea.style.display = 'grid';
@@ -467,19 +426,6 @@
         } finally {
             loader.style.display = 'none';
         }
-    }
-
-    function renderKeywords(containerId, keywords) {
-        const ul = document.getElementById(containerId);
-        ul.innerHTML = '';
-        keywords.forEach(kw => {
-            const li = document.createElement('li');
-            li.className = 'keyword-item';
-            li.textContent = kw;
-            li.onclick = () => copySimple(kw);
-            li.title = "Klik untuk copy";
-            ul.appendChild(li);
-        });
     }
 
     function renderTitles(containerId, titles) {
@@ -508,7 +454,7 @@
 
     function copySimple(text) {
         navigator.clipboard.writeText(text).then(() => {
-            // Tidak perlu alert popup yang mengganggu, cukup console atau visual feedback kecil jika perlu
+             // Opsional: Feedback visual kecil jika diperlukan
         });
     }
 
@@ -556,7 +502,6 @@
     function removeSaved(index) {
         savedTitles.splice(index, 1);
         updateSavedUI();
-        // Catatan: Jika judul yang dihapus sedang tampil di hasil riset, tombolnya tidak otomatis berubah jadi "Simpan" lagi (untuk performa), tapi logic tetap aman.
     }
 
     function clearAllSaved() {
