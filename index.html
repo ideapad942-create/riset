@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stock Title to Keyword Extractor</title>
+    <title>Microstock Keyword Extractor</title>
     <style>
         :root {
             --bg-color: #1e1e2e;
             --card-bg: #2b2b3b;
             --text-color: #e0e0e0;
             --accent-color: #4CAF50;
+            --secondary-color: #2196F3;
             --border-color: #444;
         }
 
@@ -33,7 +34,7 @@
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            height: 80vh;
+            height: 85vh;
         }
 
         /* Tabs Styling */
@@ -84,6 +85,7 @@
             margin-bottom: 8px;
             font-weight: bold;
             color: #ccc;
+            display: block;
         }
 
         textarea, input[type="text"], input[type="password"] {
@@ -100,7 +102,7 @@
 
         textarea {
             resize: none;
-            height: 150px;
+            height: 120px;
         }
 
         button.action-btn {
@@ -113,27 +115,53 @@
             font-size: 16px;
             font-weight: bold;
             transition: background 0.2s;
-            align-self: flex-start;
+            margin-bottom: 10px;
         }
 
         button.action-btn:hover {
             background-color: #45a049;
         }
 
-        button.copy-btn {
-            background-color: #2196F3;
-            margin-top: 10px;
+        /* Result List Styling */
+        .keyword-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
         }
 
-        .result-box {
+        .keyword-item {
             background-color: #181820;
-            border: 1px solid var(--accent-color);
+            border: 1px solid var(--border-color);
+            margin-bottom: 8px;
+            padding: 12px;
             border-radius: 6px;
-            padding: 15px;
-            margin-top: 10px;
-            white-space: pre-wrap;
-            font-size: 16px;
-            line-height: 1.5;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: border-color 0.2s;
+        }
+
+        .keyword-item:hover {
+            border-color: var(--accent-color);
+        }
+
+        .keyword-text {
+            font-weight: 500;
+            color: #fff;
+        }
+
+        .copy-icon-btn {
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .copy-icon-btn:hover {
+            background-color: #1976D2;
         }
 
         .note {
@@ -145,13 +173,13 @@
 
         .footer {
             text-align: center;
-            padding: 10px;
+            padding: 15px;
             font-size: 12px;
             color: #555;
+            background-color: #222;
             border-top: 1px solid var(--border-color);
         }
 
-        /* Loading Spinner */
         .loader {
             border: 4px solid #f3f3f3;
             border-top: 4px solid var(--accent-color);
@@ -177,42 +205,43 @@
     <div class="tabs">
         <button class="tab-btn active" onclick="openTab('tab1')">1. API Key</button>
         <button class="tab-btn" onclick="openTab('tab2')">2. Input Title</button>
-        <button class="tab-btn" onclick="openTab('tab3')">3. Output Keyword</button>
+        <button class="tab-btn" onclick="openTab('tab3')">3. Hasil Keyword</button>
     </div>
 
     <div id="tab1" class="tab-content active">
         <h2>Konfigurasi Groq</h2>
         <label for="apiKey">Masukkan API Key Groq Anda:</label>
         <input type="password" id="apiKey" placeholder="gsk_...">
-        <p class="note">Key akan disimpan otomatis di browser Anda untuk sesi berikutnya.</p>
-        <button class="action-btn" onclick="saveKeyAndNext()">Simpan & Lanjut ke Input</button>
+        <p class="note">Key tersimpan otomatis di browser (Local Storage).</p>
+        <button class="action-btn" onclick="saveKeyAndNext()">Simpan & Lanjut</button>
     </div>
 
     <div id="tab2" class="tab-content">
-        <h2>Input Judul Referensi</h2>
-        <label for="inputTitle">Tempel Judul Panjang dari Adobe Stock:</label>
-        <textarea id="inputTitle" placeholder="Contoh: Noise, Dust, Hair, Scratches, and Grain on Old Damaged Film Seamless Texture with Low Noise..."></textarea>
+        <h2>Input Judul Adobe Stock</h2>
+        <label for="inputTitle">Tempel Judul Panjang:</label>
+        <textarea id="inputTitle" placeholder="Contoh: Noise, Dust, Hair, Scratches, and Grain on Old Damaged Film Seamless Texture..."></textarea>
         
         <div class="control-panel">
-            <button class="action-btn" onclick="processTitle()">Ekstrak Kata Kunci Utama</button>
+            <button class="action-btn" onclick="processTitle()">Generate 5 Kata Kunci</button>
             <div class="loader" id="loader"></div>
         </div>
     </div>
 
     <div id="tab3" class="tab-content">
-        <h2>Hasil Ekstraksi</h2>
-        <p class="note">Gunakan kata kunci ini untuk cek volume kompetitor di Adobe Stock.</p>
+        <h2>Rekomendasi Pencarian</h2>
+        <p class="note">Berikut 5 frasa kunci teratas untuk cek volume kompetitor:</p>
         
-        <label>Kata Kunci Utama:</label>
-        <div id="outputResult" class="result-box">Hasil akan muncul di sini...</div>
+        <ul id="outputList" class="keyword-list">
+            <li style="color: #666; text-align: center; padding: 20px;">Belum ada data. Silakan input judul di Tab 2.</li>
+        </ul>
         
-        <button class="action-btn copy-btn" onclick="copyResult()">Copy Kata Kunci</button>
-        <br><br>
-        <button class="action-btn" style="background-color: #555;" onclick="openTab('tab2')">Kembali ke Input</button>
+        <div style="margin-top: 20px;">
+            <button class="action-btn" style="background-color: #555; width: 100%;" onclick="openTab('tab2')">Riset Judul Baru</button>
+        </div>
     </div>
 
     <div class="footer">
-        Tool by @bangjeeyy
+        License : @bangjeeyy
     </div>
 </div>
 
@@ -226,15 +255,10 @@
     });
 
     function openTab(tabId) {
-        // Hide all contents
         document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-        // Deactivate all buttons
         document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
         
-        // Show target content
         document.getElementById(tabId).classList.add('active');
-        
-        // Activate target button logic
         const index = tabId.replace('tab', '') - 1;
         document.querySelectorAll('.tab-btn')[index].classList.add('active');
     }
@@ -253,7 +277,7 @@
         const apiKey = localStorage.getItem('groqApiKey');
         const title = document.getElementById('inputTitle').value.trim();
         const loader = document.getElementById('loader');
-        const resultBox = document.getElementById('outputResult');
+        const outputList = document.getElementById('outputList');
 
         if (!apiKey) {
             alert('API Key belum diset! Silakan kembali ke Tab 1.');
@@ -266,9 +290,8 @@
             return;
         }
 
-        // UI Loading State
         loader.style.display = 'block';
-        resultBox.textContent = 'Sedang menganalisis...';
+        outputList.innerHTML = '<li style="text-align:center; padding:20px;">Sedang menganalisis judul...</li>';
 
         try {
             const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
@@ -278,19 +301,20 @@
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    model: "llama3-70b-8192", // Model cepat dan akurat
+                    // MODEL DIPERBARUI ke versi stabil
+                    model: "llama-3.3-70b-versatile", 
                     messages: [
                         {
                             role: "system",
-                            content: "Anda adalah asisten riset microstock. Tugas Anda adalah mengekstrak 'Visual Subject' utama dari judul video stock yang panjang. Tujuannya adalah menemukan kata kunci inti (2-5 kata) untuk mencari kompetitor di Adobe Stock. \n\nCONTOH:\nInput: 'Noise, Dust, Hair, Scratches, and Grain on Old Damaged Film Seamless Texture with Low Noise Saturation'\nOutput: Film Seamless Texture\n\nInput: 'Abstract Blue Technology Background 4K Loop with Circuit Board'\nOutput: Abstract Technology Background\n\nBerikan HANYA kata kuncinya saja tanpa penjelasan tambahan."
+                            content: "You are a Microstock Keyword Specialist for Adobe Stock. Your task is to extract exactly 5 distinct, high-relevance search phrases (English US) from the user's video title. These phrases will be used to check competitor volume. \n\nRules:\n1. Focus on the core visual subject (e.g., 'Film Grain', 'Old Texture').\n2. Make them specific enough to be relevant but broad enough to be searched.\n3. Return ONLY the 5 phrases separated by a pipe symbol (|). Do not number them. \n\nExample Output: Old Damaged Film|Film Seamless Texture|Retro Noise Overlay|Vintage Scratch Effect|Film Grain Loop"
                         },
                         {
                             role: "user",
-                            content: `Judul: "${title}"\n\nEkstrak kata kunci utamanya:`
+                            content: `Title: "${title}"`
                         }
                     ],
-                    temperature: 0.3,
-                    max_tokens: 50
+                    temperature: 0.5,
+                    max_tokens: 100
                 })
             });
 
@@ -300,23 +324,43 @@
                 throw new Error(data.error.message);
             }
 
-            const extractedKeyword = data.choices[0].message.content.replace(/"/g, '').trim();
-            
-            resultBox.textContent = extractedKeyword;
-            openTab('tab3'); // Pindah otomatis ke tab hasil
+            // Parsing hasil (dipisah berdasarkan tanda |)
+            const rawContent = data.choices[0].message.content;
+            const keywords = rawContent.split('|').map(k => k.trim()).filter(k => k.length > 0);
+
+            // Render ke HTML
+            outputList.innerHTML = '';
+            keywords.forEach(keyword => {
+                const li = document.createElement('li');
+                li.className = 'keyword-item';
+                li.innerHTML = `
+                    <span class="keyword-text">${keyword}</span>
+                    <button class="copy-icon-btn" onclick="copyText('${keyword}')">Copy</button>
+                `;
+                outputList.appendChild(li);
+            });
+
+            openTab('tab3');
 
         } catch (error) {
-            resultBox.textContent = 'Error: ' + error.message;
+            outputList.innerHTML = `<li style="color: #ff6b6b; padding:15px;">Error: ${error.message}</li>`;
             alert('Gagal mengambil data: ' + error.message);
         } finally {
             loader.style.display = 'none';
         }
     }
 
-    function copyResult() {
-        const text = document.getElementById('outputResult').textContent;
+    function copyText(text) {
         navigator.clipboard.writeText(text).then(() => {
-            alert('Kata kunci berhasil disalin!');
+            // Feedback visual kecil (opsional)
+            const activeElement = document.activeElement;
+            const originalText = activeElement.innerText;
+            activeElement.innerText = "Copied!";
+            activeElement.style.backgroundColor = "#4CAF50";
+            setTimeout(() => {
+                activeElement.innerText = originalText;
+                activeElement.style.backgroundColor = "";
+            }, 1000);
         });
     }
 </script>
