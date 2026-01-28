@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Microstock Title Pro - Strict Mode</title>
+    <title>Microstock Title Research Pro</title>
     <style>
         :root {
             --bg-color: #121212;
@@ -105,6 +105,26 @@
 
         .tab-content.active { display: flex; }
 
+        /* Guide List Styling */
+        .guide-list {
+            padding-left: 20px;
+            margin: 0;
+            color: #ccc;
+        }
+        .guide-list li {
+            margin-bottom: 12px;
+            line-height: 1.6;
+            font-size: 14px;
+        }
+        .highlight {
+            color: var(--accent-green);
+            font-weight: bold;
+        }
+        .warn {
+            color: var(--save-color);
+            font-weight: bold;
+        }
+
         /* Form Elements */
         label { 
             margin-bottom: 10px; 
@@ -166,7 +186,7 @@
         }
 
         .result-column {
-            background-color: #181818; /* Lebih gelap sedikit dari panel */
+            background-color: #181818;
             border: 1px solid var(--border-color);
             border-radius: 12px;
             padding: 20px;
@@ -199,7 +219,7 @@
         .title-card {
             background-color: var(--card-bg);
             border: 1px solid var(--border-color);
-            border-left: 4px solid transparent; /* Indikator visual */
+            border-left: 4px solid transparent; 
             padding: 15px;
             border-radius: 8px;
             display: flex;
@@ -215,7 +235,6 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.3);
         }
 
-        /* Border warna beda per kolom */
         .result-column:first-child .title-card { border-left-color: var(--accent-green); }
         .result-column:last-child .title-card { border-left-color: var(--accent-blue); }
 
@@ -226,7 +245,6 @@
             line-height: 1.4;
         }
 
-        /* Button Group inside Card */
         .btn-group {
             display: flex;
             gap: 10px;
@@ -251,9 +269,7 @@
         }
         
         .icon-btn:hover { background-color: #333; color: #fff; border-color: #666; }
-
         .icon-btn.btn-save:hover { border-color: var(--save-color); color: var(--save-color); }
-        
         .icon-btn.saved {
             background-color: var(--save-color);
             color: #000;
@@ -336,17 +352,21 @@
     </div>
 
     <div id="tab2" class="tab-content">
-        <h2 style="color:var(--accent-green); margin-top:0;">Cara Penggunaan</h2>
-        <div style="line-height: 1.8; font-size: 14px; color: #ccc;">
-            <p><strong>1. Input Judul:</strong> Masuk ke Tab 3, tempel (paste) judul video kompetitor dari Adobe Stock.</p>
-            <p><strong>2. Hasil Analisis:</strong> AI akan membuat 2 variasi judul:</p>
-            <ul style="background: #181818; padding: 15px 30px; border-radius: 8px; border: 1px solid #333;">
-                <li><strong style="color:var(--accent-green)">Opsi A (Strict):</strong> Judul tepat <strong>3 Kata</strong>. (Singkat, Padat).</li>
-                <li><strong style="color:var(--accent-blue)">Opsi B (Detail):</strong> Judul antara <strong>5 - 10 Kata</strong>. (Deskriptif).</li>
-            </ul>
-            <p><strong>3. Simpan & Export:</strong> Klik tombol <span style="background:#333; padding:2px 6px; border-radius:4px; font-size:11px;">💾 SIMPAN</span> pada judul yang bagus. Buka Tab 4 untuk download daftar judul.</p>
+        <h2 style="color:var(--accent-green); margin-top:0;">Panduan Riset Microstock</h2>
+        <div style="background-color:#181818; padding:20px; border-radius:8px; border:1px solid #333;">
+            <ol class="guide-list">
+                <li>Ubah lokasi Adobe Stock menjadi <span class="highlight">US atau UK</span>.</li>
+                <li>Gunakan filter urutan berdasarkan <span class="highlight">Download</span>.</li>
+                <li>Cari video yang mau diriset (stok pesaing).</li>
+                <li>Copy <span class="highlight">Full Judulnya</span> (judul lengkap).</li>
+                <li>Paste di Tab 3. Akan muncul 2 Opsi: <span class="highlight">Versi Singkat (Umum)</span> & <span class="highlight">Versi Detail (Spesifik)</span>.</li>
+                <li>Silahkan <span class="highlight">Copy satu per satu</span> judul yang dihasilkan AI untuk cek pesaingnya di Adobe Stock.</li>
+                <li>Prioritas pesaing di bawah <span class="highlight">10.000</span> (Lebih bagus di bawah <span class="warn">5.000</span>).</li>
+                <li>Simpan judul yang bagus. <span class="highlight">Data AMAN</span> tidak hilang walau di-refresh. Hapus nanti setelah di-ekspor.</li>
+            </ol>
         </div>
-        <button class="action-btn" onclick="openTab('tab3')">Mulai Sekarang</button>
+        <br>
+        <button class="action-btn" onclick="openTab('tab3')">Mengerti, Mulai Riset</button>
     </div>
 
     <div id="tab3" class="tab-content">
@@ -364,12 +384,12 @@
         <div id="resultsArea" class="result-container" style="display:none;">
             
             <div class="result-column">
-                <div class="col-header">Opsi A: 3 Kata (Strict)</div>
+                <div class="col-header">Opsi A: 3 Kata (Umum)</div>
                 <div id="coreTitles" class="title-list"></div>
             </div>
 
             <div class="result-column">
-                <div class="col-header v2">Opsi B: 5-10 Kata (Detail)</div>
+                <div class="col-header v2">Opsi B: 5-10 Kata (Spesifik)</div>
                 <div id="specificTitles" class="title-list"></div>
             </div>
 
@@ -394,7 +414,7 @@
     </div>
 
     <div class="footer">
-        Microstock Tool Professional v4.1
+        Microstock Tool Professional v4.2
     </div>
 </div>
 
@@ -406,6 +426,7 @@
         const savedKey = localStorage.getItem('groqApiKey');
         if (savedKey) document.getElementById('apiKey').value = savedKey;
         
+        // Data tersimpan di localStorage, aman saat refresh
         const storedList = localStorage.getItem('mySavedTitles');
         if(storedList) {
             savedTitles = JSON.parse(storedList);
@@ -473,7 +494,7 @@
                         },
                         { role: "user", content: `Original Title: "${title}"` }
                     ],
-                    temperature: 0.4, // Lower temperature for stricter adherence
+                    temperature: 0.4,
                     max_tokens: 600,
                     response_format: { type: "json_object" }
                 })
@@ -482,10 +503,7 @@
             const data = await response.json();
             const content = JSON.parse(data.choices[0].message.content);
             
-            // Render Set 1 (3 Words)
             renderTitles('coreTitles', content.set1.titles);
-
-            // Render Set 2 (5-10 Words)
             renderTitles('specificTitles', content.set2.titles);
 
             resultsArea.style.display = 'grid';
@@ -505,7 +523,6 @@
             const card = document.createElement('div');
             card.className = 'title-card';
             
-            // Cek status simpan
             const isSaved = savedTitles.includes(t);
             const saveBtnClass = isSaved ? 'icon-btn btn-save saved' : 'icon-btn btn-save';
             const saveBtnText = isSaved ? '✓ Disimpan' : '💾 Simpan';
@@ -528,7 +545,6 @@
 
     function copySimple(text) {
         navigator.clipboard.writeText(text);
-        // Visual feedback could be added here if needed
     }
 
     function handleSave(btn, text) {
@@ -537,7 +553,6 @@
         savedTitles.push(text);
         updateSavedUI();
 
-        // Update Button UI directly
         btn.className = 'icon-btn btn-save saved';
         btn.innerHTML = '✓ Disimpan';
         btn.removeAttribute('onclick');
