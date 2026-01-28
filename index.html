@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Microstock Research Pro - Ultimate UI</title>
+    <title>Riset Stock</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     
     <style>
@@ -371,7 +371,7 @@
                 <li>Gunakan filter urutan berdasarkan <span class="highlight">Downloads</span> (Terlaris).</li>
                 <li>Cari video kompetitor yang ingin diriset.</li>
                 <li>Copy <span class="highlight">Full Judulnya</span> (Judul Lengkap).</li>
-                <li>Paste di <strong>Tab 3</strong>. Tool akan membuat 2 versi: <span class="col-a">Versi Singkat (3 Kata)</span> & <span class="col-b">Versi Detail (5-10 Kata)</span>.</li>
+                <li>Paste di <strong>Tab 3</strong>. Tool akan membuat 2 versi: <span class="col-a">Versi Singkat</span> & <span class="col-b">Versi Detail</span>.</li>
                 <li>Copy judul satu per satu, cek jumlah pesaing di Adobe Stock.</li>
                 <li>Target pesaing di bawah <span class="highlight">10.000</span> (Idealnya <span class="warn">&lt; 5.000</span>).</li>
                 <li>Simpan judul potensial. Data <span class="highlight">AMAN</span> (tidak hilang saat refresh). Hapus setelah diekspor.</li>
@@ -386,7 +386,7 @@
         <div style="display:flex; align-items:flex-start; gap:20px;">
             <div style="flex-grow:1;">
                 <label for="inputTitle">Judul Kompetitor (Adobe Stock):</label>
-                <textarea id="inputTitle" placeholder="Paste judul panjang di sini..."></textarea>
+                <textarea id="inputTitle" placeholder="Paste judul yang sudah dicopy di sini..."></textarea>
             </div>
             <div style="margin-top:30px;">
                  <button class="action-btn" onclick="processTitle()">Generate ✨</button>
@@ -396,11 +396,11 @@
 
         <div id="resultsArea" class="result-container" style="display:none;">
             <div class="result-column">
-                <div class="col-header col-a">Opsi A: 3 Kata (Umum)</div>
+                <div class="col-header col-a">keyword version 1 (Umum)</div>
                 <div id="coreTitles" class="title-list"></div>
             </div>
             <div class="result-column">
-                <div class="col-header col-b">Opsi B: 5-10 Kata (Spesifik)</div>
+                <div class="col-header col-b">keyword version 2 (Spesifik)</div>
                 <div id="specificTitles" class="title-list"></div>
             </div>
         </div>
@@ -426,7 +426,7 @@
     </div>
 
     <div class="footer">
-        Ultimate Microstock Tool © 2026
+        Riset Keyword Tool © 2026
     </div>
 </div>
 
