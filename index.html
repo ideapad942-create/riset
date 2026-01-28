@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Title to Keyword Extractor</title>
+    <style>
+        :root {
+            --bg-color: #1e1e2e;
+            --card-bg: #2b2b3b;
+            --text-color: #e0e0e0;
+            --accent-color: #4CAF50;
+            --border-color: #444;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 700px;
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 80vh;
+        }
+
+        /* Tabs Styling */
+        .tabs {
+            display: flex;
+            background-color: #222;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 15px;
+            background: none;
+            border: none;
+            color: #888;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s;
+            outline: none;
+        }
+
+        .tab-btn:hover {
+            background-color: #333;
+            color: #fff;
+        }
+
+        .tab-btn.active {
+            color: var(--accent-color);
+            border-bottom: 3px solid var(--accent-color);
+            background-color: var(--card-bg);
+        }
+
+        /* Content Styling */
+        .tab-content {
+            display: none;
+            padding: 25px;
+            flex-grow: 1;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        .tab-content.active {
+            display: flex;
+        }
+
+        label {
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #ccc;
+        }
+
+        textarea, input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            background-color: #181820;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: #fff;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+
+        textarea {
+            resize: none;
+            height: 150px;
+        }
+
+        button.action-btn {
+            background-color: var(--accent-color);
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background 0.2s;
+            align-self: flex-start;
+        }
+
+        button.action-btn:hover {
+            background-color: #45a049;
+        }
+
+        button.copy-btn {
+            background-color: #2196F3;
+            margin-top: 10px;
+        }
+
+        .result-box {
+            background-color: #181820;
+            border: 1px solid var(--accent-color);
+            border-radius: 6px;
+            padding: 15px;
+            margin-top: 10px;
+            white-space: pre-wrap;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        .note {
+            font-size: 12px;
+            color: #888;
+            margin-top: -10px;
+            margin-bottom: 15px;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 10px;
+            font-size: 12px;
+            color: #555;
+            border-top: 1px solid var(--border-color);
+        }
+
+        /* Loading Spinner */
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--accent-color);
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            display: none;
+            margin-left: 15px;
+        }
+
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
+        .control-panel {
+            display: flex;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="tabs">
+        <button class="tab-btn active" onclick="openTab('tab1')">1. API Key</button>
+        <button class="tab-btn" onclick="openTab('tab2')">2. Input Title</button>
+        <button class="tab-btn" onclick="openTab('tab3')">3. Output Keyword</button>
+    </div>
+
+    <div id="tab1" class="tab-content active">
+        <h2>Konfigurasi Groq</h2>
+        <label for="apiKey">Masukkan API Key Groq Anda:</label>
+        <input type="password" id="apiKey" placeholder="gsk_...">
+        <p class="note">Key akan disimpan otomatis di browser Anda untuk sesi berikutnya.</p>
+        <button class="action-btn" onclick="saveKeyAndNext()">Simpan & Lanjut ke Input</button>
+    </div>
+
+    <div id="tab2" class="tab-content">
+        <h2>Input Judul Referensi</h2>
+        <label for="inputTitle">Tempel Judul Panjang dari Adobe Stock:</label>
+        <textarea id="inputTitle" placeholder="Contoh: Noise, Dust, Hair, Scratches, and Grain on Old Damaged Film Seamless Texture with Low Noise..."></textarea>
+        
+        <div class="control-panel">
+            <button class="action-btn" onclick="processTitle()">Ekstrak Kata Kunci Utama</button>
+            <div class="loader" id="loader"></div>
+        </div>
+    </div>
+
+    <div id="tab3" class="tab-content">
+        <h2>Hasil Ekstraksi</h2>
+        <p class="note">Gunakan kata kunci ini untuk cek volume kompetitor di Adobe Stock.</p>
+        
+        <label>Kata Kunci Utama:</label>
+        <div id="outputResult" class="result-box">Hasil akan muncul di sini...</div>
+        
+        <button class="action-btn copy-btn" onclick="copyResult()">Copy Kata Kunci</button>
+        <br><br>
+        <button class="action-btn" style="background-color: #555;" onclick="openTab('tab2')">Kembali ke Input</button>
+    </div>
+
+    <div class="footer">
+        Tool by @bangjeeyy
+    </div>
+</div>
+
+<script>
+    // Load API Key saat start
+    document.addEventListener('DOMContentLoaded', () => {
+        const savedKey = localStorage.getItem('groqApiKey');
+        if (savedKey) {
+            document.getElementById('apiKey').value = savedKey;
+        }
+    });
+
+    function openTab(tabId) {
+        // Hide all contents
+        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+        // Deactivate all buttons
+        document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+        
+        // Show target content
+        document.getElementById(tabId).classList.add('active');
+        
+        // Activate target button logic
+        const index = tabId.replace('tab', '') - 1;
+        document.querySelectorAll('.tab-btn')[index].classList.add('active');
+    }
+
+    function saveKeyAndNext() {
+        const key = document.getElementById('apiKey').value.trim();
+        if (!key) {
+            alert('Masukkan API Key terlebih dahulu!');
+            return;
+        }
+        localStorage.setItem('groqApiKey', key);
+        openTab('tab2');
+    }
+
+    async function processTitle() {
+        const apiKey = localStorage.getItem('groqApiKey');
+        const title = document.getElementById('inputTitle').value.trim();
+        const loader = document.getElementById('loader');
+        const resultBox = document.getElementById('outputResult');
+
+        if (!apiKey) {
+            alert('API Key belum diset! Silakan kembali ke Tab 1.');
+            openTab('tab1');
+            return;
+        }
+
+        if (!title) {
+            alert('Judul tidak boleh kosong.');
+            return;
+        }
+
+        // UI Loading State
+        loader.style.display = 'block';
+        resultBox.textContent = 'Sedang menganalisis...';
+
+        try {
+            const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${apiKey}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    model: "llama3-70b-8192", // Model cepat dan akurat
+                    messages: [
+                        {
+                            role: "system",
+                            content: "Anda adalah asisten riset microstock. Tugas Anda adalah mengekstrak 'Visual Subject' utama dari judul video stock yang panjang. Tujuannya adalah menemukan kata kunci inti (2-5 kata) untuk mencari kompetitor di Adobe Stock. \n\nCONTOH:\nInput: 'Noise, Dust, Hair, Scratches, and Grain on Old Damaged Film Seamless Texture with Low Noise Saturation'\nOutput: Film Seamless Texture\n\nInput: 'Abstract Blue Technology Background 4K Loop with Circuit Board'\nOutput: Abstract Technology Background\n\nBerikan HANYA kata kuncinya saja tanpa penjelasan tambahan."
+                        },
+                        {
+                            role: "user",
+                            content: `Judul: "${title}"\n\nEkstrak kata kunci utamanya:`
+                        }
+                    ],
+                    temperature: 0.3,
+                    max_tokens: 50
+                })
+            });
+
+            const data = await response.json();
+            
+            if (data.error) {
+                throw new Error(data.error.message);
+            }
+
+            const extractedKeyword = data.choices[0].message.content.replace(/"/g, '').trim();
+            
+            resultBox.textContent = extractedKeyword;
+            openTab('tab3'); // Pindah otomatis ke tab hasil
+
+        } catch (error) {
+            resultBox.textContent = 'Error: ' + error.message;
+            alert('Gagal mengambil data: ' + error.message);
+        } finally {
+            loader.style.display = 'none';
+        }
+    }
+
+    function copyResult() {
+        const text = document.getElementById('outputResult').textContent;
+        navigator.clipboard.writeText(text).then(() => {
+            alert('Kata kunci berhasil disalin!');
+        });
+    }
+</script>
+
+</body>
+</html>
